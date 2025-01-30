@@ -44,14 +44,7 @@ public partial class MainWindow : Window
 
         foreach (var block in _gameService.GetBlocks())
         {
-            var rect = new Rectangle
-            {
-                Width = BlockSize,
-                Height = BlockSize,
-                Fill = new SolidColorBrush(GetColor(block.Color)),
-                Stroke = new SolidColorBrush(Colors.Black),
-                StrokeThickness = 1
-            };
+            var rect = CreateBlockRectangle(block);
 
             // Ustawienie pozycji bloku na Canvas
             Canvas.SetLeft(rect, block.X * BlockSize);
@@ -59,6 +52,18 @@ public partial class MainWindow : Window
 
             GameCanvas.Children.Add(rect);
         }
+    }
+
+    private Rectangle CreateBlockRectangle(Block block)
+    {
+        return new Rectangle
+        {
+            Width = BlockSize,
+            Height = BlockSize,
+            Fill = new SolidColorBrush(GetColor(block.Color)),
+            Stroke = new SolidColorBrush(Colors.Black),
+            StrokeThickness = 1
+        };
     }
 
     private Color GetColor(ConsoleColor color)

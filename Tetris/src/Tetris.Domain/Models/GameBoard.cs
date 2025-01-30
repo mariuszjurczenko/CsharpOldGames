@@ -13,14 +13,14 @@ public class GameBoard
     {
         Width = width;
         Height = height;
-        Grid = new Block[height, width];
+        Grid = new Block[width, height];
     }
 
-    public bool IsCellEmpty(int x, int y) => Grid[y, x] == null;
+    public bool IsCellEmpty(int x, int y) => Grid[x, y] == null;
 
     public void PlaceBlock(Block block)
     {
-        if (block.Y >= 0 && block.Y < Height && block.X >= 0 && block.X < Width)
-            Grid[block.Y, block.X] = block;
+        if (block.X >= 0 && block.X < Width && block.Y >= 0 && block.Y < Height)
+            Grid[block.X, block.Y] = block;
     }
 }

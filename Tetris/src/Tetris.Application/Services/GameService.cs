@@ -41,11 +41,11 @@ public class GameService
             blocks.Add(_currentBlock);
         }
 
-        for (int y = 0; y < _gameBoard.Height; y++)
+        for (int x = 0; x < _gameBoard.Width; x++)
         {
-            for (int x = 0; x < _gameBoard.Width; x++)
+            for (int y = 0; y < _gameBoard.Height; y++)
             {
-                var block = _gameBoard.Grid[y, x];
+                var block = _gameBoard.Grid[x, y];
                 if (block != null)
                 {
                     blocks.Add(block);
