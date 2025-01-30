@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetris.Infrastructure", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetris.Presentation", "Tetris\src\Tetris.Presentation\Tetris.Presentation.csproj", "{0C6AC5D4-ECDA-4D36-9094-1BFF4C11BE9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetris.Domain.GameBoardTests", "Tetris\tests\Tetris.Domain.GameBoardTests\Tetris.Domain.GameBoardTests.csproj", "{05E3FE41-2B8F-4610-9287-51EC1DE58D2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetris.Application.GameServiceTests", "Tetris\tests\Tetris.Application.GameServiceTests\Tetris.Application.GameServiceTests.csproj", "{14A9CB6F-FD1A-4744-9DE2-A31CABB298D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,14 @@ Global
 		{0C6AC5D4-ECDA-4D36-9094-1BFF4C11BE9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C6AC5D4-ECDA-4D36-9094-1BFF4C11BE9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C6AC5D4-ECDA-4D36-9094-1BFF4C11BE9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05E3FE41-2B8F-4610-9287-51EC1DE58D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E3FE41-2B8F-4610-9287-51EC1DE58D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E3FE41-2B8F-4610-9287-51EC1DE58D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E3FE41-2B8F-4610-9287-51EC1DE58D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A9CB6F-FD1A-4744-9DE2-A31CABB298D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A9CB6F-FD1A-4744-9DE2-A31CABB298D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A9CB6F-FD1A-4744-9DE2-A31CABB298D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A9CB6F-FD1A-4744-9DE2-A31CABB298D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,5 +58,7 @@ Global
 		{79294F7E-C4CF-4C8C-AD25-26DCDEF5BBC5} = {415D743C-122B-46F3-93A5-5BBFC8D59DA8}
 		{59BBE7D6-29AE-4E33-A3CE-6FC6DD2BBD41} = {415D743C-122B-46F3-93A5-5BBFC8D59DA8}
 		{0C6AC5D4-ECDA-4D36-9094-1BFF4C11BE9C} = {415D743C-122B-46F3-93A5-5BBFC8D59DA8}
+		{05E3FE41-2B8F-4610-9287-51EC1DE58D2E} = {C11586D9-09BB-45E3-A2D9-C12C621F9608}
+		{14A9CB6F-FD1A-4744-9DE2-A31CABB298D9} = {C11586D9-09BB-45E3-A2D9-C12C621F9608}
 	EndGlobalSection
 EndGlobal

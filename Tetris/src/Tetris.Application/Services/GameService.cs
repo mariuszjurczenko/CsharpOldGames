@@ -4,10 +4,10 @@ namespace Tetris.Application.Services;
 
 public class GameService
 {
-    private readonly GameBoard _gameBoard;
+    private readonly IGameBoard _gameBoard;
     private Block _currentBlock;
 
-    public GameService(GameBoard gameBoard)
+    public GameService(IGameBoard gameBoard)
     {
         _gameBoard = gameBoard;
     }
@@ -58,6 +58,6 @@ public class GameService
 
     private bool CanMove(int x, int y)
     {
-        return y<_gameBoard.Height && _gameBoard.IsCellEmpty(x, y);
+        return y < _gameBoard.Height && _gameBoard.IsCellEmpty(x, y);
     }
 }
