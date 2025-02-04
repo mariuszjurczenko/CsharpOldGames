@@ -5,7 +5,8 @@ namespace Tetris.Application.Services;
 public class GameService
 {
     private readonly IGameBoard _gameBoard;
-    private Block _currentBlock;
+    private GameBlock _currentGameBlock;
+    private bool _isGameOver;
 
     public GameService(IGameBoard gameBoard)
     {
@@ -14,20 +15,27 @@ public class GameService
 
     public void SpawnBlock()
     {
-        _currentBlock = new Block { X = _gameBoard.Width / 2, Y = 0, Color = ConsoleColor.Green };
+        _currentGameBlock = GetRandomGameBlock();
+        _currentGameBlock.X = _gameBoard.Width / 2 - 1;
+        _currentGameBlock.Y = 0;
+
+        if(!CanMove(0, 0))
+        {
+            _isGameOver = true;
+        }
     }
 
     public void MoveBlockDown()
     {
-        if (_currentBlock == null) return;
+        if (_isGameOver || _currentGameBlock == null) return;
 
-        if (CanMove(_currentBlock.X, _currentBlock.Y + 1))
+        if (CanMove(0, 1))
         {
-            _currentBlock.Y++;
+            _currentGameBlock.Y++;
         }
         else
         {
-            _gameBoard.PlaceBlock(_currentBlock);
+            PlaceGameBlock();
             SpawnBlock();
         }
     }
@@ -36,9 +44,14 @@ public class GameService
     {
         var blocks = new List<Block>();
 
-        if (_currentBlock != null)
+        if (_currentGameBlock != null)
         {
-            blocks.Add(_currentBlock);
+            blocks.AddRange(_currentGameBlock.GetCoordinates().Select(coord => new Block
+            {
+                X = coord.X,
+                Y = coord.Y,
+                Color = _currentGameBlock.Color
+            }));
         }
 
         for (int x = 0; x < _gameBoard.Width; x++)
@@ -58,6 +71,46 @@ public class GameService
 
     private bool CanMove(int x, int y)
     {
-        return y < _gameBoard.Height && _gameBoard.IsCellEmpty(x, y);
+        return _currentGameBlock.GetCoordinates()
+            .All(cord =>
+            {
+                int newX = cord.X + x;
+                int newY = cord.Y + y;
+
+                if (newX < 0 || newY < 0 || newX >= _gameBoard.Width || newY >= _gameBoard.Height)
+                    return false;
+
+                return _gameBoard.IsCellEmpty(newX,newY);
+            });
     }
+
+    private GameBlock GetRandomGameBlock()
+    {
+        var gameBlocks = new GameBlock[]
+        {
+            new GameBlockI(),
+            new GameBlockO(),
+            new GameBlockL(),
+            new GameBlockJ(),
+            new GameBlockT(),
+            new GameBlockS(),
+            new GameBlockZ(),
+        };
+
+        return gameBlocks[new Random().Next(gameBlocks.Length)];
+    }
+
+    private void PlaceGameBlock()
+    {
+        foreach (var (x,y) in _currentGameBlock.GetCoordinates())
+        {
+            _gameBoard.PlaceBlock(new Block
+            {
+                X = x,
+                Y = y,
+                Color = _currentGameBlock.Color
+            });
+        }
+    }
+
 }
