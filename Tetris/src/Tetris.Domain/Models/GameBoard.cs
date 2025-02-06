@@ -1,4 +1,6 @@
-﻿namespace Tetris.Domain.Models;
+﻿using Tetris.Domain.Interfaces;
+
+namespace Tetris.Domain.Models;
 
 public class GameBoard : IGameBoard
 {

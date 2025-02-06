@@ -1,21 +1,24 @@
-﻿using Tetris.Domain.Models;
+﻿using Tetris.Domain.Interfaces;
+using Tetris.Domain.Models;
 
 namespace Tetris.Application.Services;
 
 public class GameService
 {
     private readonly IGameBoard _gameBoard;
+    private readonly IGameBlockFactory _gameBlockFactory;
     private GameBlock _currentGameBlock;
     private bool _isGameOver;
 
-    public GameService(IGameBoard gameBoard)
+    public GameService(IGameBoard gameBoard, IGameBlockFactory gameBlockFactory)
     {
         _gameBoard = gameBoard;
+        _gameBlockFactory = gameBlockFactory;
     }
 
     public void SpawnBlock()
     {
-        _currentGameBlock = GetRandomGameBlock();
+        _currentGameBlock = _gameBlockFactory.CreateRandomGameBlock();
         _currentGameBlock.X = _gameBoard.Width / 2 - 1;
         _currentGameBlock.Y = 0;
 
@@ -82,22 +85,6 @@ public class GameService
 
                 return _gameBoard.IsCellEmpty(newX,newY);
             });
-    }
-
-    private GameBlock GetRandomGameBlock()
-    {
-        var gameBlocks = new GameBlock[]
-        {
-            new GameBlockI(),
-            new GameBlockO(),
-            new GameBlockL(),
-            new GameBlockJ(),
-            new GameBlockT(),
-            new GameBlockS(),
-            new GameBlockZ(),
-        };
-
-        return gameBlocks[new Random().Next(gameBlocks.Length)];
     }
 
     private void PlaceGameBlock()

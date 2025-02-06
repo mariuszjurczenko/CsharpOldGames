@@ -4,6 +4,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Tetris.Application.Services;
+using Tetris.Domain.Factories;
 using Tetris.Domain.Models;
 
 namespace Tetris.Presentation;
@@ -20,7 +21,8 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         var gameBoard = new GameBoard(10, 20);
-        _gameService = new GameService(gameBoard);
+        var gameBlockFactory = new GameBlockFactory();
+        _gameService = new GameService(gameBoard, gameBlockFactory);
 
         _gameTimer = new DispatcherTimer
         {
