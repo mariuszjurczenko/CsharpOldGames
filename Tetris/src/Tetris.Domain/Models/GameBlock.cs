@@ -1,4 +1,6 @@
-﻿namespace Tetris.Domain.Models;
+﻿using Tetris.Domain.Strategies;
+
+namespace Tetris.Domain.Models;
 
 public class GameBlock
 {
@@ -7,13 +9,15 @@ public class GameBlock
     public ConsoleColor Color { get; set; }
 
     protected int[,] Shape;
+    private readonly IRotationStrategy _rotationStrategy;
 
-    public GameBlock(int[,] shape, ConsoleColor color)
+    public GameBlock(int[,] shape, ConsoleColor color, IRotationStrategy rotationStrategy)
     {
         X = 0;
         Y = 0;
         Shape = shape;
         Color = color;
+        _rotationStrategy = rotationStrategy;
     }
 
     public IEnumerable<(int X, int Y)> GetCoordinates()
@@ -35,20 +39,12 @@ public class GameBlock
 
     public void Rotate()
     {
-        int rows = Shape.GetLength(0);
-        int cols = Shape.GetLength(1);
+        Shape = GetRotatedShape();
+    }
 
-        var newShape = new int[cols, rows];
-
-        for (int row = 0; row < rows; row++)
-        {
-            for (int col = 0; col < cols; col++)
-            {
-                newShape[col, rows - 1 - row] = Shape[row, col];
-            }
-        }
-
-        Shape = newShape;
+    public int[,] GetRotatedShape()
+    {
+        return _rotationStrategy.Rotate(Shape);
     }
 }
 
@@ -59,7 +55,7 @@ public class GameBlockI : GameBlock
         { 1, 1, 1, 1 }
     };
 
-    public GameBlockI() : base(InitialShape, ConsoleColor.Cyan) {}
+    public GameBlockI() : base(InitialShape, ConsoleColor.Cyan, new MirrorRotationStrategy()) {}
 }
 
 public class GameBlockO : GameBlock
@@ -70,7 +66,7 @@ public class GameBlockO : GameBlock
         { 1, 1 },
     };
 
-    public GameBlockO() : base(InitialShape, ConsoleColor.Yellow) { }
+    public GameBlockO() : base(InitialShape, ConsoleColor.Yellow, new NoRotationStrategy()) { }
 }
 
 public class GameBlockL : GameBlock
@@ -81,7 +77,7 @@ public class GameBlockL : GameBlock
         { 1, 1, 1 },
     };
 
-    public GameBlockL() : base(InitialShape, ConsoleColor.Blue) { }
+    public GameBlockL() : base(InitialShape, ConsoleColor.Blue, new MirrorRotationStrategy()) { }
 }
 
 public class GameBlockJ : GameBlock
@@ -92,7 +88,7 @@ public class GameBlockJ : GameBlock
         { 1, 1, 1 }
     };
 
-    public GameBlockJ() : base(InitialShape, ConsoleColor.DarkBlue) { }
+    public GameBlockJ() : base(InitialShape, ConsoleColor.DarkBlue, new MirrorRotationStrategy()) { }
 }
 
 public class GameBlockT : GameBlock
@@ -103,7 +99,7 @@ public class GameBlockT : GameBlock
         { 1, 1, 1 }
     };
 
-    public GameBlockT() : base(InitialShape, ConsoleColor.Magenta) { }
+    public GameBlockT() : base(InitialShape, ConsoleColor.Magenta, new MirrorRotationStrategy()) { }
 }
 
 public class GameBlockS : GameBlock
@@ -114,7 +110,7 @@ public class GameBlockS : GameBlock
         { 1, 1, 0 }
     };
 
-    public GameBlockS() : base(InitialShape, ConsoleColor.Green) { }
+    public GameBlockS() : base(InitialShape, ConsoleColor.Green, new MirrorRotationStrategy()) { }
 }
 
 public class GameBlockZ : GameBlock
@@ -125,5 +121,5 @@ public class GameBlockZ : GameBlock
         { 0, 1, 1 }
     };
 
-    public GameBlockZ() : base(InitialShape, ConsoleColor.Red) { }
+    public GameBlockZ() : base(InitialShape, ConsoleColor.Red, new MirrorRotationStrategy()) { }
 }

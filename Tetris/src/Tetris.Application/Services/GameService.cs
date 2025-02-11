@@ -72,6 +72,39 @@ public class GameService
         return blocks;
     }
 
+    public void RotateCurrentBlock()
+    {
+        if (_currentGameBlock == null)
+            return; 
+
+        if (CanRotate())
+        {
+            _currentGameBlock.Rotate();
+        }
+    }
+    
+    public void MoveBlockLeft()
+    {
+        if (_currentGameBlock == null)
+            return;
+
+        if (CanMove(-1,0))
+        {
+            _currentGameBlock.X--;
+        }
+    }
+
+    public void MoveBlockRight()
+    {
+        if (_currentGameBlock == null)
+            return;
+
+        if (CanMove(1, 0))
+        {
+            _currentGameBlock.X++;
+        }
+    }
+
     private bool CanMove(int x, int y)
     {
         return _currentGameBlock.GetCoordinates()
@@ -100,4 +133,35 @@ public class GameService
         }
     }
 
+    private bool CanRotate()
+    {
+        if (_currentGameBlock == null) return false;
+
+        var rotatedShape = _currentGameBlock.GetRotatedShape();
+
+        foreach (var (x,y) in GetCoordinatesForShape(rotatedShape, _currentGameBlock.X, _currentGameBlock.Y))
+        {
+            if (x < 0 || x >= _gameBoard.Width || y < 0 || y > _gameBoard.Height)
+                return false;
+
+            if (!_gameBoard.IsCellEmpty(x,y))
+                return false;
+        }
+
+        return true;
+    }
+
+    private IEnumerable<(int x, int y)> GetCoordinatesForShape(int[,] rotatedShape, int x, int y)
+    {
+        for (var row = 0; row < rotatedShape.GetLength(0); row++)
+        {
+            for (var col = 0; col < rotatedShape.GetLength(1); col++)
+            {
+                if (rotatedShape[row,col] == 1)
+                {
+                    yield return (x + col, y + row);
+                }
+            }
+        }
+    }
 }

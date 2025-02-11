@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -81,5 +82,25 @@ public partial class MainWindow : Window
             ConsoleColor.Red => Colors.Red,
             _ => Colors.White,
         };
+    }
+
+    private void Window_KeyDown(object sender, KeyEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Key.Left:
+                _gameService.MoveBlockLeft();
+                break;
+            case Key.Right:
+                _gameService.MoveBlockRight();
+                break;
+            case Key.Up:
+                _gameService.RotateCurrentBlock();
+                break;
+            case Key.Down:
+                _gameService.MoveBlockDown();
+                break;
+        }
+        Render();
     }
 }
