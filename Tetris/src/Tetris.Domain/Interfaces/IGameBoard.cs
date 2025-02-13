@@ -9,4 +9,5 @@ public interface IGameBoard
     Block[,] Grid { get; }
     bool IsCellEmpty(int x, int y);
     void PlaceBlock(Block block);
+    int ClearFullLines();
 }

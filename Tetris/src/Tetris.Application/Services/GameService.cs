@@ -7,14 +7,20 @@ public class GameService
 {
     private readonly IGameBoard _gameBoard;
     private readonly IGameBlockFactory _gameBlockFactory;
+    private readonly Score _score;
     private GameBlock _currentGameBlock;
     private bool _isGameOver;
+    public event Action<int, int>? ScoreUpdate;
 
     public GameService(IGameBoard gameBoard, IGameBlockFactory gameBlockFactory)
     {
         _gameBoard = gameBoard;
         _gameBlockFactory = gameBlockFactory;
+        _score = new Score();
     }
+
+    public int GetScore() => _score.Points;
+    public int GetLinesClered() => _score.LinesCleared;
 
     public void SpawnBlock()
     {
@@ -130,6 +136,13 @@ public class GameService
                 Y = y,
                 Color = _currentGameBlock.Color
             });
+        }
+
+        var clearedLines = _gameBoard.ClearFullLines();
+        if (clearedLines > 0)
+        {
+            _score.AddScore(clearedLines);
+            ScoreUpdate?.Invoke(_score.Points, _score.LinesCleared);
         }
     }
 

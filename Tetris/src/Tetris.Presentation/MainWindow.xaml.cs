@@ -25,6 +25,15 @@ public partial class MainWindow : Window
         var gameBlockFactory = new GameBlockFactory();
         _gameService = new GameService(gameBoard, gameBlockFactory);
 
+        _gameService.ScoreUpdate += (points, lines) =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                ScoreText.Text = points.ToString();
+                LinesText.Text = lines.ToString();
+            });
+        };
+
         _gameTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromMilliseconds(500)
