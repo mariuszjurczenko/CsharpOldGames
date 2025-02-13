@@ -6,11 +6,12 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Tetris.Application.Services;
 using Tetris.Domain.Factories;
+using Tetris.Domain.Interfaces;
 using Tetris.Domain.Models;
 
 namespace Tetris.Presentation;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Window, IGameObserver
 {
     private readonly GameService _gameService;
     private readonly DispatcherTimer _gameTimer;
@@ -25,14 +26,7 @@ public partial class MainWindow : Window
         var gameBlockFactory = new GameBlockFactory();
         _gameService = new GameService(gameBoard, gameBlockFactory);
 
-        _gameService.ScoreUpdate += (points, lines) =>
-        {
-            Dispatcher.Invoke(() =>
-            {
-                ScoreText.Text = points.ToString();
-                LinesText.Text = lines.ToString();
-            });
-        };
+        _gameService.Attach(this);
 
         _gameTimer = new DispatcherTimer
         {
@@ -111,5 +105,22 @@ public partial class MainWindow : Window
                 break;
         }
         Render();
+    }
+
+    public void OnScoreUpdate(int score, int linesCleared)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            ScoreText.Text = score.ToString();
+            LinesText.Text = linesCleared.ToString();
+        });
+    }
+
+    public void OnGameOver()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            MessageBox.Show("Game Over!", "Tetris", MessageBoxButton.OK, MessageBoxImage.Information);
+        });
     }
 }

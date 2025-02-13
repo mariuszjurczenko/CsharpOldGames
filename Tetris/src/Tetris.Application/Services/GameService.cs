@@ -3,14 +3,13 @@ using Tetris.Domain.Models;
 
 namespace Tetris.Application.Services;
 
-public class GameService
+public class GameService : GameSubject
 {
     private readonly IGameBoard _gameBoard;
     private readonly IGameBlockFactory _gameBlockFactory;
     private readonly Score _score;
     private GameBlock _currentGameBlock;
     private bool _isGameOver;
-    public event Action<int, int>? ScoreUpdate;
 
     public GameService(IGameBoard gameBoard, IGameBlockFactory gameBlockFactory)
     {
@@ -31,6 +30,7 @@ public class GameService
         if(!CanMove(0, 0))
         {
             _isGameOver = true;
+            NotifyGameOver();
         }
     }
 
@@ -142,7 +142,7 @@ public class GameService
         if (clearedLines > 0)
         {
             _score.AddScore(clearedLines);
-            ScoreUpdate?.Invoke(_score.Points, _score.LinesCleared);
+            NotifyScoreUpdated(_score.Points, _score.LinesCleared);
         }
     }
 
