@@ -8,24 +8,80 @@ using Tetris.Application.Services;
 using Tetris.Domain.Factories;
 using Tetris.Domain.Interfaces;
 using Tetris.Domain.Models;
+using Tetris.Infrastructure.Repositories;
 
 namespace Tetris.Presentation;
 
 public partial class MainWindow : Window, IGameObserver
 {
-    private readonly GameService _gameService;
-    private readonly DispatcherTimer _gameTimer;
+    private GameService _gameService;
+    private DispatcherTimer _gameTimer;
+    private IGameBlockFactory _gameBlockFactory;
+    private IHighScoreRepository _highScoreRepository;
+    private HighScoreService _highScoreService;
 
     private const int BlockSize = 20;
 
     public MainWindow()
     {
         InitializeComponent();
+        InitializeGame();
+    }
 
+    public void OnScoreUpdate(int score, int linesCleared)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            ScoreText.Text = score.ToString();
+            LinesText.Text = linesCleared.ToString();
+        });
+    }
+
+    public void OnGameOver()
+    {
+        _gameTimer?.Stop();
+
+        Dispatcher.Invoke(() =>
+        {
+            var dialog = new InputDialog("Game Over!", "Podaj Swoje Imię:");
+
+            if (dialog.ShowDialog() == true)
+            {
+                var highScore = new HighScore
+                {
+                    PlayerName = dialog.PlayerName,
+                    Score = _gameService.GetScore(),
+                    LinesCleared = _gameService.GetLinesClered(),
+                    Date = DateTime.Now,
+                };
+                _highScoreService.AddHighScore(highScore);
+                UpdateHighScoresList();
+            }
+
+            var result = MessageBox.Show(
+                "Chcesz rozpocząć nowa grę ?",
+                "Game Over!",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                InitializeGame();
+            }
+            else
+            {
+                Close();
+            }
+        });
+    }
+
+    private void InitializeGame()
+    {
         var gameBoard = new GameBoard(10, 20);
-        var gameBlockFactory = new GameBlockFactory();
-        _gameService = new GameService(gameBoard, gameBlockFactory);
-
+        _gameBlockFactory = new GameBlockFactory();
+        _gameService = new GameService(gameBoard, _gameBlockFactory);
+        _highScoreRepository = new JsonHighScoreRepository();
+        _highScoreService = new HighScoreService(_highScoreRepository);
         _gameService.Attach(this);
 
         _gameTimer = new DispatcherTimer
@@ -34,8 +90,30 @@ public partial class MainWindow : Window, IGameObserver
         };
 
         _gameTimer.Tick += GameTick;
+
+        ScoreText.Text = "0";
+        LinesText.Text = "0";
+        GameCanvas.Children.Clear();
+
         _gameService.SpawnBlock();
         _gameTimer.Start();
+        UpdateHighScoresList();
+    }
+
+    private void UpdateHighScoresList()
+    {
+        var highScores = _highScoreService.GetTopHighScores();
+        HighScoresList.Children.Clear();
+
+        foreach (var score in highScores)
+        {
+            var scoreText = new TextBlock
+            {
+                Text = $"{score.PlayerName}: {score.Score} punktów ({score.LinesCleared} lini)",
+                Margin = new Thickness(0, 0, 0, 5)
+            };
+            HighScoresList.Children.Add(scoreText);
+        }
     }
 
     private void GameTick(object? sender, EventArgs e)
@@ -105,22 +183,5 @@ public partial class MainWindow : Window, IGameObserver
                 break;
         }
         Render();
-    }
-
-    public void OnScoreUpdate(int score, int linesCleared)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            ScoreText.Text = score.ToString();
-            LinesText.Text = linesCleared.ToString();
-        });
-    }
-
-    public void OnGameOver()
-    {
-        Dispatcher.Invoke(() =>
-        {
-            MessageBox.Show("Game Over!", "Tetris", MessageBoxButton.OK, MessageBoxImage.Information);
-        });
     }
 }

@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tetris.Application\Tetris.Application.csproj" />
+    <ProjectReference Include="..\Tetris.Infrastructure\Tetris.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

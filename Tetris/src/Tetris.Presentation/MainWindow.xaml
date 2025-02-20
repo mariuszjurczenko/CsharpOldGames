@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris.Presentation"
         mc:Ignorable="d"
-        Title="Tetris" Height="440" Width="300" KeyDown="Window_KeyDown">
+        Title="Tetris" Height="440" Width="420" KeyDown="Window_KeyDown">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -17,6 +17,8 @@
             <TextBlock Name="ScoreText" Text="0" FontSize="20" Margin="0,0,0,10"/>
             <TextBlock Text="Linie:" FontSize="16"/>
             <TextBlock Name="LinesText" Text="0" FontSize="16"/>
+            <TextBlock Text="Najlepsze Wyniki:" FontSize="16" FontWeight="Bold" />
+            <StackPanel Name="HighScoresList" Margin="0,10,0,0"/>
         </StackPanel>
     </Grid>
 </Window>
