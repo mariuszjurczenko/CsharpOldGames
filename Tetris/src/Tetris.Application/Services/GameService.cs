@@ -9,6 +9,7 @@ public class GameService : GameSubject
     private readonly IGameBlockFactory _gameBlockFactory;
     private readonly Score _score;
     private GameBlock _currentGameBlock;
+    private GameBlock _nextGameBlock;
     private bool _isGameOver;
 
     public GameService(IGameBoard gameBoard, IGameBlockFactory gameBlockFactory)
@@ -16,18 +17,22 @@ public class GameService : GameSubject
         _gameBoard = gameBoard;
         _gameBlockFactory = gameBlockFactory;
         _score = new Score();
+        _nextGameBlock = _gameBlockFactory.CreateRandomGameBlock();
     }
 
     public int GetScore() => _score.Points;
     public int GetLinesClered() => _score.LinesCleared;
+    public GameBlock GetNextBlock() => _nextGameBlock;
 
     public void SpawnBlock()
     {
-        _currentGameBlock = _gameBlockFactory.CreateRandomGameBlock();
+        _currentGameBlock = _nextGameBlock;
         _currentGameBlock.X = _gameBoard.Width / 2 - 1;
         _currentGameBlock.Y = 0;
 
-        if(!CanMove(0, 0))
+        _nextGameBlock = _gameBlockFactory.CreateRandomGameBlock();
+
+        if (!CanMove(0, 0))
         {
             _isGameOver = true;
             NotifyGameOver();

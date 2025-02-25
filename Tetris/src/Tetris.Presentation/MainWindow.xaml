@@ -13,6 +13,8 @@
         </Grid.ColumnDefinitions>
         <Canvas Name="GameCanvas" Background="Black" Grid.Column="0"/>
         <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="Nastepny klocek:" FontSize="16" FontWeight="Bold" Margin="0,10,0,0"/>
+            <Canvas Name="NextBlockCanvas" Width="100" Height="60" Background="White" Margin="0,10,0,10"/>
             <TextBlock Text="Wynik:" FontSize="16"/>
             <TextBlock Name="ScoreText" Text="0" FontSize="20" Margin="0,0,0,10"/>
             <TextBlock Text="Linie:" FontSize="16"/>

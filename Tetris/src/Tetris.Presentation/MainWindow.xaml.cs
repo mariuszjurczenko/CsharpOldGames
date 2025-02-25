@@ -80,7 +80,7 @@ public partial class MainWindow : Window, IGameObserver
         var gameBoard = new GameBoard(10, 20);
         _gameBlockFactory = new GameBlockFactory();
         _gameService = new GameService(gameBoard, _gameBlockFactory);
-        _highScoreRepository = new JsonHighScoreRepository();
+        _highScoreRepository = new MementoHighScoreRepository();
         _highScoreService = new HighScoreService(_highScoreRepository);
         _gameService.Attach(this);
 
@@ -96,8 +96,34 @@ public partial class MainWindow : Window, IGameObserver
         GameCanvas.Children.Clear();
 
         _gameService.SpawnBlock();
+        RenderNextBlock();
         _gameTimer.Start();
         UpdateHighScoresList();
+    }
+
+    private void RenderNextBlock()
+    {
+        NextBlockCanvas.Children.Clear();
+
+        var nextBlock = _gameService.GetNextBlock();
+
+        if (nextBlock == null) return;
+
+        foreach (var coord in nextBlock.GetCoordinates())
+        {
+            var rect = CreateBlockRectangle(new Block
+            {
+                X = coord.X - _gameService.GetNextBlock().X,
+                Y = coord.Y - _gameService.GetNextBlock().Y,
+                Color = nextBlock.Color
+            });
+
+            Canvas.SetLeft(rect, (coord.X + _gameService.GetNextBlock().X + 1) * BlockSize);
+            Canvas.SetTop(rect, (coord.Y + _gameService.GetNextBlock().Y + 1) * BlockSize);
+
+            NextBlockCanvas.Children.Add(rect);
+        }
+
     }
 
     private void UpdateHighScoresList()
@@ -120,6 +146,7 @@ public partial class MainWindow : Window, IGameObserver
     {
         _gameService.MoveBlockDown();
         Render();
+        RenderNextBlock();
     }
 
     private void Render()
